@@ -1,6 +1,6 @@
-## Essentialis-admin
+# Essentialis-admin
 
-This is a personal project of a REST API used to manage a small business of cosmetic products called "Essentialis Produtos Artesanais", which offers organic and vegan cosmetics mainly for the cities of Sorocaba-SP and São José dos Campos-SP, Brazil.
+This is a personal project of a REST API used to manage a small business of cosmetic products.
 
 ## Usage
 
