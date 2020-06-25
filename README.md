@@ -27,9 +27,9 @@ python app.py
 | METHOD | Endpoint | Description | Header? |
 | --- | --- | --- | --- |
 | GET | /raw_materials| Returns all raw materias stored in the database.  | N/A |
-| POST | /raw_materials| Creates a new raw material entry in the database. | N/A |
-| PUT | /raw_materials| Updates a specific raw material entry in the database. | Content-type = application/JSON |
-| DEL | /raw_materials | Removes a specific raw material entry from the database. | Content-type = application/JSON |
+| POST | /raw_material| Creates a new raw material entry in the database. | N/A |
+| PUT | /raw_material| Updates a specific raw material entry in the database. | Content-type = application/JSON |
+| DEL | /raw_material | Removes a specific raw material entry from the database. | Content-type = application/JSON |
 
 > Example of body (POST / PUT):
 ```json
