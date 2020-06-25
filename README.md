@@ -5,7 +5,7 @@ This is a personal project of a RESTFul API relying on Python Flask framework an
 ## How to run the API server
 
 The API is started by running the commands below in a Bash or in the
-command prompt. They create a virtual environment, install all project dependencies on it and then run the application.
+command prompt. They firstly create a virtual environment, install all project dependencies on it and then run the application. The API runs in [http://localhost:5000/](http://localhost:5000/).
 
 For Linux/MAC:
 ```bash
