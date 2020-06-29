@@ -20,6 +20,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:/
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'rebequinha'
 
+# initializes database
+db.init_app(app)
+
 # creates API instance
 api = Api(app)
 
@@ -35,12 +38,10 @@ api.add_resource(RecipeList, '/recipes')
 # api.add_resource(UserRegister, '/register')
 
 if __name__ == '__main__':
-
-    db.init_app(app)
-
+    
     if app.config['DEBUG']:
         @app.before_first_request
         def create_tables():
             db.create_all()
-
+            
     app.run(port=5000)

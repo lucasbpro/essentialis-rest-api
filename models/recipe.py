@@ -17,6 +17,8 @@ class RecipeModel(db.Model):
     creation_date = db.Column(db.String(constants['MEDIUM_LENGTH']))
     last_update = db.Column(db.String(constants['MEDIUM_LENGTH']))
 
+    #materials = db.relationship('raw_material')
+
 
     def __init__(self, description, labor_cost, supply_cost):
         self.description = description
@@ -26,7 +28,7 @@ class RecipeModel(db.Model):
         self.last_update = self.creation_date
 
     def json(self):
-        return  {#'recipe_id'        : self.recipe_id,
+        return  {'id'               : self.id,
                  'description'      : self.description,
                  'creation_date'    : self.creation_date,
                  'last_update'      : self.last_update,
@@ -46,9 +48,9 @@ class RecipeModel(db.Model):
     def find_by_description(cls, description):
         return cls.query.filter_by(description=description).first()
 
-    # @classmethod
-    # def find_by_id(cls, id):
-    #     return cls.query.filter_by(recipe_id=id).first()
-    #
+    @classmethod
+    def find_by_id(cls, id_):
+         return cls.query.filter_by(id=id_).first()
+    
     # def get_all_materials(self):
     #     return self.materials.query.all()

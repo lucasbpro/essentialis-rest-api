@@ -9,7 +9,7 @@ class RawMaterialModel(db.Model):
     __tablename__ = 'raw_materials'
 
     # define columns in table
-    id = db.Column(db.Integer, primary_key=True)
+    id_ = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String(constants['MEDIUM_LENGTH']))
     package_price = db.Column(db.Float(constants['PRICE_PRECISION']))
     package_amt = db.Column(db.Integer)
@@ -33,7 +33,7 @@ class RawMaterialModel(db.Model):
         self.sell_by_date = sell_by_date
 
     def json(self):
-        return  {#'material_id'  : self.material_id,
+        return  {'id'           : self.id_,
                  'description'  : self.description,
                  'package_price': self.package_price,
                  'package_amt'  : self.package_amt,
@@ -54,6 +54,6 @@ class RawMaterialModel(db.Model):
     def find_by_name(cls, name):
         return cls.query.filter_by(description=name).first()
 
-    # @classmethod
-    # def find_by_id(cls, id):
-    #     return cls.query.filter_by(material_id=id).first()
+    @classmethod
+     def find_by_id(cls, id):
+        return cls.query.filter_by(id_=id).first()
