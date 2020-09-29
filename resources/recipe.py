@@ -1,5 +1,6 @@
 # import flask libs
 from flask_restful import Resource, reqparse
+from flask import request
 #from flask_jwt import jwt_required
 
 from datetime import datetime
@@ -11,26 +12,24 @@ from models.recipe import RecipeModel
 class Recipe(Resource):
 
     # adds a parser to handle PUT an POST HTTP requests
-    parser_create = reqparse.RequestParser()
-    parser_create.add_argument('description',type=str,required=True,help=constants['HELP_PARSER'])
-    parser_create.add_argument('labor_cost',type=float,required=True,help=constants['HELP_PARSER'])
-    parser_create.add_argument('supply_cost',type=float,required=True,help=constants['HELP_PARSER'])
+    parser = reqparse.RequestParser()
+    parser.add_argument('description',type=str,required=False)
+    parser.add_argument('labor_cost',type=float,required=False)
+    parser.add_argument('supply_cost',type=float,required=False)
 
-    # adds a parser to handle DEL HTTP requests
-    parser_delete = reqparse.RequestParser()
-    parser_delete.add_argument('description',type=str,required=True,help=constants['HELP_PARSER'])
-
-    # TODO: to handle HTTP GET /recipe/<string:recipe_code>
-    def get(self, recipe_code):
-        pass
+    # to handle HTTP GET /recipe?id=<int:id>
+    def get(self):
+        id_ = request.args.get('id')
+        recipe = RecipeModel.find_by_id(id_)
+        return recipe.json(), 200
 
     def post(self):
         # gets parameter from parser
-        data = Recipe.parser_create.parse_args()
+        data = Recipe.parser.parse_args()
 
         # checks if material exists in database
-        description = data['description']
-        recipe = RecipeModel.find_by_description(description)
+        id_ = request.args.get('id')
+        recipe = RecipeModel.find_by_id(id_)
 
         # in case it exists, returns a message and HTTP 400 code (BAD REQUEST)
         if recipe:
@@ -50,16 +49,10 @@ class Recipe(Resource):
         # returns JSON with the created Material and returns CREATED status (201)
         return recipe.json(), 201
 
-    def post(self, raw_material_id):
-        return {'message' : "teste"}
-
     def delete(self):
-        # gets parameter from parser
-        data = Recipe.parser_delete.parse_args()
-        description = data['description']
-
         # checks if material exists in database
-        recipe = RecipeModel.find_by_description(description)
+        id_ = request.args.get('id')
+        recipe = RecipeModel.find_by_id(id_)
 
         # in case it exists, delete it
         if recipe:
@@ -70,17 +63,25 @@ class Recipe(Resource):
 
     def put(self):
         # gets parameter from parser
-        data = Recipe.parser_create.parse_args()
+        data = Recipe.parser.parse_args()
 
         # checks if item exists in database
-        description = data['description']
-        recipe = RecipeModel.find_by_description(description)
+        id_ = request.args.get('id')
+        recipe = RecipeModel.find_by_id(id_)
 
-        # in case it exists, updates the item
+        # in case it exists, updates it
         if recipe:
-            recipe.description = data['description']
-            recipe.labor_cost = data['labor_cost']
-            recipe.supply_cost = data['supply_cost']
+            for key in data.keys():
+                if key=='description':
+                    recipe.description = data['description']
+                if key=='labor_cost':
+                    recipe.labor_cost = data['labor_cost']
+                if key=='supply_cost':
+                    recipe.supply_cost = data['supply_cost']
+                if key=='sell_by_date':
+                    recipe.sell_by_date = data['sell_by_date']
+                if key=='materials':
+                    pass
             recipe.last_update = datetime.now().strftime("%d/%m/%Y %H:%M")
 
         # in case not exist, creates a new item
@@ -96,6 +97,7 @@ class Recipe(Resource):
 
         # returns
         return recipe.json()
+
 
 # class used to get the whole list of recipes from the database
 class RecipeList(Resource):

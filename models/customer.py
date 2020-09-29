@@ -2,8 +2,8 @@
 from db import db                     # import SQLAlchemy object
 from constants import constants       # constants dictionary
 
-# defines the model for 'customers' table in db
-class CustomersModel(db.Model):
+# defines the model for 'customer' table in db
+class CustomerModel(db.Model):
 
     # name of the table in database
     __tablename__ = 'customers'

@@ -17,9 +17,6 @@ class RecipeModel(db.Model):
     creation_date = db.Column(db.String(constants['MEDIUM_LENGTH']))
     last_update = db.Column(db.String(constants['MEDIUM_LENGTH']))
 
-    #materials = db.relationship('raw_material')
-
-
     def __init__(self, description, labor_cost, supply_cost):
         self.description = description
         self.labor_cost = labor_cost
@@ -33,7 +30,8 @@ class RecipeModel(db.Model):
                  'creation_date'    : self.creation_date,
                  'last_update'      : self.last_update,
                  'labor_cost'       : self.labor_cost,
-                 'supply_cost'      : self.supply_cost
+                 'supply_cost'      : self.supply_cost,
+                 'materials'        : self.materials
                  }
 
     def save_to_db(self):
@@ -52,5 +50,5 @@ class RecipeModel(db.Model):
     def find_by_id(cls, id_):
          return cls.query.filter_by(id=id_).first()
     
-    # def get_all_materials(self):
-    #     return self.materials.query.all()
+    def get_all_materials(self):
+        return self.materials
