@@ -37,6 +37,7 @@ api.add_resource(RecipeList, '/recipes')
 
 # api.add_resource(UserRegister, '/register')
 
+    
 if __name__ == '__main__':
     
     if app.config['DEBUG']:
