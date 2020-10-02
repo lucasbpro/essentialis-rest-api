@@ -60,13 +60,5 @@ class RawMaterialModel(db.Model):
         return cls.query.filter_by(description=name).first()
 
     @classmethod
-<<<<<<< HEAD
     def find_by_id(cls, id):
         return cls.query.filter_by(id_=id).first()
-||||||| merged common ancestors
-     def find_by_id(cls, id):
-        return cls.query.filter_by(id_=id).first()
-=======
-    def find_by_id(cls, id):
-        return cls.query.filter_by(id=id).first()
->>>>>>> develop
