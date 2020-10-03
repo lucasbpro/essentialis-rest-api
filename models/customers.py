@@ -9,16 +9,13 @@ class CustomerModel(db.Model):
     __tablename__ = 'customers'
 
     # define columns in table
-    id_ = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(constants['MEDIUM_LENGTH']))
     email = db.Column(db.String(constants['MEDIUM_LENGTH']))   
     birth_date = db.Column(db.String(constants['SHORT_LENGTH']))
 
     # define relationships with other tables
-    # orders = db.relationship('OrderModel',
-    #                           secondary=orders,
-    #                           backref=db.backref('customer_orders'),
-    #                           lazy='dynamic')
+    orders = db.relationship('OrderModel', lazy='dynamic')
 
     def __init__(self, name, email, birth_date):
         self.name = name
@@ -27,8 +24,9 @@ class CustomerModel(db.Model):
 
     def json(self):
         return  {
-                'name' : self.name,
-                'email': self.email,
+                'id'    : self.id,
+                'name'  : self.name,
+                'email' : self.email,
                 'birth_date'  : self.birth_date,
         }
 
@@ -45,5 +43,5 @@ class CustomerModel(db.Model):
         return cls.query.filter_by(name=name).first()
 
     @classmethod
-    def find_by_id(cls, id):
-        return cls.query.filter_by(id_=id).first()
+    def find_by_id(cls, id_):
+        return cls.query.filter_by(id=id_).first()

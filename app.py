@@ -11,6 +11,8 @@ from db import db
 # import resorces
 from resources.raw_material import RawMaterial, RawMaterialList
 from resources.recipe import *
+from resources.customers import *
+from resources.orders import *
 
 # creates Flask application
 app = Flask(__name__)
@@ -32,8 +34,12 @@ api = Api(app)
 api.add_resource(RawMaterial, '/raw_material')
 api.add_resource(RawMaterialList, '/raw_materials')
 api.add_resource(Recipe, '/recipe')
-api.add_resource(MaterialList, '/recipe/<int:recipe_id>')
 api.add_resource(RecipeList, '/recipes')
+api.add_resource(MaterialList, '/recipe/<int:recipe_id>')
+api.add_resource(Customer, '/customer')
+api.add_resource(CustomerList, '/customers')
+api.add_resource(Order, '/order')
+api.add_resource(OrderList, '/orders')
 
 # api.add_resource(UserRegister, '/register')
 
