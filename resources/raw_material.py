@@ -88,7 +88,7 @@ class RawMaterials(Resource):
 
     # handles HTTTP request GET /raw_materials
     def get(self):
-        return {'Raw Materials': [x.json() for x in RawMaterialModel.query.all()]}
+        return [x.json() for x in RawMaterialModel.query.all()]
 
     # handles HTTTP request POST /raw_materials
     def post(self):

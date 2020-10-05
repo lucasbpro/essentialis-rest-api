@@ -37,7 +37,7 @@ class Orders(Resource):
 
     # handles HTTP request GET /orders
     def get(self):
-        return {'orders': [x.json() for x in OrderModel.query.all()]}
+        return [x.json() for x in OrderModel.query.all()]
 
     # handles HTTP request POST /orders
     def post(self):

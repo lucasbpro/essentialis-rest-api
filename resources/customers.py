@@ -73,7 +73,7 @@ class Customers(Resource):
 
     # handles HTTP request GET /customers
     def get(self):
-        return {'Customers': [x.json() for x in CustomerModel.query.all()]}
+        return [x.json() for x in CustomerModel.query.all()]
 
     # handles HTTP request POST /customers
     def post(self):

@@ -80,7 +80,7 @@ class Recipes(Resource):
 
     # handles HTTP request GET /recipes
     def get(self):
-        return {'Recipes': [x.json() for x in RecipeModel.query.all()]}
+        return [x.json() for x in RecipeModel.query.all()]
 
     # handles HTTP request POST /recipes
     def post(self):
