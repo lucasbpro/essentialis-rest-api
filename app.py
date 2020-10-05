@@ -9,7 +9,7 @@ from db import db
 #from security import authenticate, identity
 
 # import resorces
-from resources.raw_material import RawMaterial, RawMaterialList
+from resources.raw_material import *
 from resources.recipe import *
 from resources.customers import *
 from resources.orders import *
@@ -31,21 +31,18 @@ api = Api(app)
 # jwt = JWT(app, authenticate, identity)  # /auth
 
 # Sets up API endpoints
-api.add_resource(RawMaterial, '/raw_material/<int:id>')
-api.add_resource(RawMaterialList, '/raw_materials')
+api.add_resource(RawMaterial, '/raw_materials/<int:id>')
+api.add_resource(RawMaterials, '/raw_materials')
 
-api.add_resource(Recipe,  '/recipe/<int:id>')
-api.add_resource(RecipePost,  '/recipe')
-api.add_resource(RecipeList, '/recipes')
+api.add_resource(Recipe,  '/recipes/<int:id>')
+api.add_resource(Recipes,  '/recipes')
 api.add_resource(MaterialList, '/recipe/<int:id>/materials')
 
-api.add_resource(Customer, '/customer/<int:id>')
-api.add_resource(CustomerPost, '/customer')
-api.add_resource(CustomerList, '/customers')
+api.add_resource(Customer, '/customers/<int:id>')
+api.add_resource(Customers, '/customers')
 
-api.add_resource(Order, '/order/<int:id>')
-api.add_resource(OrderPost, '/order')
-api.add_resource(OrderList, '/orders')
+api.add_resource(Order, '/orders/<int:id>')
+api.add_resource(Orders, '/orders')
 
 # api.add_resource(UserRegister, '/register')
 

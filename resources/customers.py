@@ -1,6 +1,6 @@
 # import flask libs
 from flask_restful import Resource, reqparse
-from flask import request
+from constants import constants
 #from flask_jwt import jwt_required
 
 # import model
@@ -30,7 +30,7 @@ class Customer(Resource):
             customer.delete_from_db()
             
         # return message and default HTTP status (200 - OK)
-        return {'Message': 'Customer has been deleted'}
+        return {'Message': constants['DELETED']}
 
     def put(self, id):
         # gets parameter from parser
@@ -64,16 +64,21 @@ class Customer(Resource):
         # returns
         return customer.json()
 
-class CustomerPost(Resource):
+class Customers(Resource):
     # adds a parser to handle POST HTTP requests
     parser = reqparse.RequestParser()
     parser.add_argument('name',type=str,required=True)
     parser.add_argument('email',type=str,required=False)
     parser.add_argument('birth_date',type=str,required=False)
 
+    # handles HTTP request GET /customers
+    def get(self):
+        return {'Customers': [x.json() for x in CustomerModel.query.all()]}
+
+    # handles HTTP request POST /customers
     def post(self):
         # gets parameter from parser
-        data = CustomerPost.parser.parse_args()
+        data = Customers.parser.parse_args()
 
         # checks if material exists in database
         customer = CustomerModel.find_by_name(data['name'])
@@ -96,8 +101,3 @@ class CustomerPost(Resource):
         # returns JSON with the created Material and returns CREATED status (201)
         return customer.json(), 201
 
-# class used to get the whole list of materials in the database
-# route: /customers
-class CustomerList(Resource):
-    def get(self):
-        return {'Customers': [x.json() for x in CustomerModel.query.all()]}

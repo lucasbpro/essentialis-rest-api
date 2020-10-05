@@ -26,7 +26,7 @@ class OrderModel(db.Model):
     def __init__(self, product_id, customer_id, notes):
         self.product_id = product_id;
         self.customer_id = customer_id;
-        self.notes = notes
+        self.notes = notes;
         self.order_total = 0;
         self.status_fabrication = "Fabricação a iniciar";
         self.status_payment = "Pagamento pendente";

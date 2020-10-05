@@ -71,16 +71,21 @@ class Recipe(Resource):
         return recipe.json()
 
 
-class RecipePost(Resource):
+class Recipes(Resource):
     # adds a parser to handle POST HTTP requests
     parser = reqparse.RequestParser()
     parser.add_argument('description',type=str,required=True)
     parser.add_argument('labor_cost',type=float,required=True)
     parser.add_argument('supply_cost',type=float,required=True)
 
+    # handles HTTP request GET /recipes
+    def get(self):
+        return {'Recipes': [x.json() for x in RecipeModel.query.all()]}
+
+    # handles HTTP request POST /recipes
     def post(self):
         # gets parameter from parser
-        data = RecipePost.parser.parse_args()
+        data = Recipes.parser.parse_args()
 
         # checks if material exists in database
         recipe = RecipeModel.find_by_description(data['description'])
@@ -102,11 +107,6 @@ class RecipePost(Resource):
 
         # returns JSON with the created Material and returns CREATED status (201)
         return recipe.json(), 201
-
-# class used to get the whole list of recipes from the database
-class RecipeList(Resource):
-    def get(self):
-        return {'Recipes': [x.json() for x in RecipeModel.query.all()]}
 
 # class used to get the whole list of materials in a recipe
 class MaterialList(Resource):

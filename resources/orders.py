@@ -8,7 +8,7 @@ from constants import constants
 from models.orders import OrderModel
 
 class Order(Resource):
-    # to handle HTTP GET /order/<int:id>
+    # to handle HTTP GET /orders/<int:id>
     def get(self, id):
         order = OrderModel.find_by_id(id)
         if order:
@@ -16,6 +16,7 @@ class Order(Resource):
         else:
             return {'Message': constants['ID_NOT_FOUND']}
 
+    # to handle HTTP DEL /orders/<int:id>
     def delete(self, id):
         # checks if material exists in database
         order = OrderModel.find_by_id(id)
@@ -27,16 +28,21 @@ class Order(Resource):
         # return message and default HTTP status (200 - OK)
         return {'Message': constants['DELETED']}
 
-class OrderPost(Resource):
+class Orders(Resource):
     # parser to handle POST request for /order route
     parser = reqparse.RequestParser();
     parser.add_argument('product_id',type=int,required=True);
     parser.add_argument('customer_id',type=int,required=True);
     parser.add_argument('notes',type=str,required=False);
 
+    # handles HTTP request GET /orders
+    def get(self):
+        return {'orders': [x.json() for x in OrderModel.query.all()]}
+
+    # handles HTTP request POST /orders
     def post(self):
         # gets parameter from parser
-        data = OrderPost.parser.parse_args()
+        data = Orders.parser.parse_args()
         
         # creates a new order
         order = OrderModel(**data)
@@ -49,9 +55,3 @@ class OrderPost(Resource):
 
         # returns JSON with the created Material and returns CREATED status (201)
         return order.json(), 201
-
-# class used to get the whole list of materials in the database
-# request GET /orders
-class OrderList(Resource):
-    def get(self):
-        return {'orders': [x.json() for x in OrderModel.query.all()]}
