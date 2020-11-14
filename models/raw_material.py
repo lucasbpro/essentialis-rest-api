@@ -56,7 +56,7 @@ class RawMaterialModel(db.Model):
         db.session.commit()
 
     @classmethod
-    def find_by_name(cls, name):
+    def find_by_description(cls, name):
         return cls.query.filter_by(description=name).first()
 
     @classmethod

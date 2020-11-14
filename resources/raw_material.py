@@ -1,6 +1,6 @@
 # import flask libs
 from flask_restful import Resource, reqparse
-from flask import request
+from constants import constants
 #from flask_jwt import jwt_required
 
 # import model
@@ -8,7 +8,7 @@ from models.raw_material import RawMaterialModel
 
 class RawMaterial(Resource):
 
-    # adds a parser to handle PUT an POST HTTP requests
+    # adds a parser to handle PUT HTTP requests
     parser = reqparse.RequestParser()
     parser.add_argument('description',type=str,required=False)
     parser.add_argument('package_price',type=float,required=False)
@@ -17,57 +17,33 @@ class RawMaterial(Resource):
     parser.add_argument('stock_amt',type=int,required=False)
     parser.add_argument('sell_by_date',type=str,required=False)
 
-    # TODO: to handle HTTP GET /raw_material?id=?<int:id>
-    def get(self):
-        id_ = request.args.get('id')
-        raw_material = RawMaterialModel.find_by_id(id_)
-        return raw_material.json(), 200
-
-    def post(self):
-        # gets parameter from parser
-        data = RawMaterial.parser.parse_args()
-
-        # checks if material exists in database
-        id_ = request.args.get('id')
-        raw_material = RawMaterialModel.find_by_id(id_)
-
-        # in case it exists, returns a message and HTTP 400 code (BAD REQUEST)
+    # handles HTTP GET /raw_materials/<int:id>
+    def get(self, id):
+        raw_material = RawMaterialModel.find_by_id(id)
         if raw_material:
-            return {'message': "A raw material with descripton '{}' already exists.".format(description)}, 400
+            return raw_material.json(), 200
+        else:
+            return {'Message': constants['ID_NOT_FOUND']}
 
-        # in case it does not exist, creates a new material using data passed
-        # along with the HTTP request
-        raw_material = RawMaterialModel(**data)
-
-        # tries to insert in database
-        # returns 500 (internal server error) in case of database failure
-        try:
-            raw_material.save_to_db()
-        except:
-            return {"message": "An error occurred upon inserting the into the database."}, 500
-
-        # returns JSON with the created Material and returns CREATED status (201)
-        return raw_material.json(), 201
-
-    def delete(self):
+    # handles HTTP DEL /raw_materials/<int:id>
+    def delete(self, id):
         # checks if material exists in database
-        id_ = request.args.get('id')
-        raw_material = RawMaterialModel.find_by_id(id_)
+        raw_material = RawMaterialModel.find_by_id(id)
 
         # in case it exists, delete it
         if raw_material:
             raw_material.delete_from_db()
             
         # return message and default HTTP status (200 - OK)
-        return {'message': 'Item deleted'}
+        return {'message': constants['DELETED']}
 
-    def put(self):
+    # handles HTTP PUT /raw_materials/<int:id>
+    def put(self, id):
         # gets parameter from parser
         data = RawMaterial.parser.parse_args()
 
         # checks if material exists in database
-        id_ = request.args.get('id')
-        raw_material = RawMaterialModel.find_by_id(id_)
+        raw_material = RawMaterialModel.find_by_id(id)
 
         # in case it exists, updates it
         if raw_material:
@@ -100,6 +76,42 @@ class RawMaterial(Resource):
 
 # class used to get the whole list of materials in the database
 # route: /raw_materials
-class RawMaterialList(Resource):
+class RawMaterials(Resource):
+    # adds a parser to handle POST HTTP requests
+    parser = reqparse.RequestParser()
+    parser.add_argument('description',type=str,required=False)
+    parser.add_argument('package_price',type=float,required=False)
+    parser.add_argument('package_amt',type=int,required=False)
+    parser.add_argument('unit_material',type=str,required=False)
+    parser.add_argument('stock_amt',type=int,required=False)
+    parser.add_argument('sell_by_date',type=str,required=False)
+
+    # handles HTTTP request GET /raw_materials
     def get(self):
-        return {[x.json() for x in RawMaterialModel.query.all()]}
+        return [x.json() for x in RawMaterialModel.query.all()]
+
+    # handles HTTTP request POST /raw_materials
+    def post(self):
+        # gets parameter from parser
+        data = RawMaterials.parser.parse_args()
+
+        # checks if material exists in database
+        raw_material = RawMaterialModel.find_by_description(data['description'])
+
+        # in case it exists, returns a message and HTTP 400 code (BAD REQUEST)
+        if raw_material:
+            return {'message': "A raw material with descripton '{}' already exists.".format(description)}, 400
+
+        # in case it does not exist, creates a new material using data passed
+        # along with the HTTP request
+        raw_material = RawMaterialModel(**data)
+
+        # tries to insert in database
+        # returns 500 (internal server error) in case of database failure
+        try:
+            raw_material.save_to_db()
+        except:
+            return {"message": "An error occurred upon inserting the into the database."}, 500
+
+        # returns JSON with the created Material and returns CREATED status (201)
+        return raw_material.json(), 201
