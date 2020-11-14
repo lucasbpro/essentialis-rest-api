@@ -112,6 +112,6 @@ class MaterialList(Resource):
         recipe = RecipeModel.find_by_id(recipe_id)
 
         if recipe:
-            return {'Materials': [x.json() for x in recipe.get_all_materials()]}
+            return {[x.json() for x in recipe.get_all_materials()]}
         else:
             return {'message' : constants['ID_NOT_FOUND']}

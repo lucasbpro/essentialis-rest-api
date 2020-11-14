@@ -95,4 +95,4 @@ class Customer(Resource):
 # route: /customers
 class CustomerList(Resource):
     def get(self):
-        return {'Customers': [x.json() for x in CustomerModel.query.all()]}
+        return {[x.json() for x in CustomerModel.query.all()]}

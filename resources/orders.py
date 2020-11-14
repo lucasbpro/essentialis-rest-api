@@ -31,7 +31,7 @@ class Order(Resource):
         try:
             order.save_to_db()
         except:
-            return {"message": "An error occurred upon inserting the into the database."}, 500
+            return {"Error Message": "An error occurred upon inserting the item into the database."}, 500
 
         # returns JSON with the created Material and returns CREATED status (201)
         return order.json(), 201
@@ -52,4 +52,4 @@ class Order(Resource):
 # request GET /orders
 class OrderList(Resource):
     def get(self):
-        return {'orders': [x.json() for x in OrderModel.query.all()]}
+        return {[x.json() for x in OrderModel.query.all()]}

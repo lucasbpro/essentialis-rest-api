@@ -102,4 +102,4 @@ class RawMaterial(Resource):
 # route: /raw_materials
 class RawMaterialList(Resource):
     def get(self):
-        return {'Raw Materials': [x.json() for x in RawMaterialModel.query.all()]}
+        return {[x.json() for x in RawMaterialModel.query.all()]}
