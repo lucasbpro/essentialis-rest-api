@@ -2,6 +2,7 @@ import os
 
 from flask import Flask
 from flask_restful import Api
+from flask_cors import CORS
 # from flask_jwt import JWT
 #from security import authenticate, identity
 
@@ -22,7 +23,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'rebequinha'
 
 # creates API instance
+CORS(app)
 api = Api(app)
+
 
 # jwt = JWT(app, authenticate, identity)  # /auth
 

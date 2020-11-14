@@ -8,6 +8,12 @@ from constants import constants
 from models.orders import OrderModel
 
 class Order(Resource):
+
+    # adds a parser to handle PUT an POST HTTP requests
+    parser = reqparse.RequestParser()
+    parser.add_argument('status_fabrication',type=str,required=False)
+    parser.add_argument('status_payment',type=float,required=False)
+
     # to handle HTTP GET /orders/<int:id>
     def get(self, id):
         order = OrderModel.find_by_id(id)
@@ -27,6 +33,32 @@ class Order(Resource):
             
         # return message and default HTTP status (200 - OK)
         return {'Message': constants['DELETED']}
+
+    # to handle HTTP PUT /orders/<int:id>
+    def put(self, id):
+        # gets parameter from parser
+        data = Order.parser.parse_args()
+
+        # checks if item exists in database
+        order = OrderModel.find_by_id(id)
+
+        # in case it exists, updates it
+        if order:
+            for key in data.keys():
+                if key=='status_fabrication':
+                    order.status_fabrication = data['status_fabrication']
+                if key=='status_payment':
+                    order.status_payment = data['status_payment']
+
+        # tries to insert in database
+        # returns 500 (internal server error) in case of database failure
+        try:
+            order.save_to_db()
+        except:
+            return {"message": constants['INSERT_FAIL']}, 500
+
+        # returns
+        return order.json()
 
 class Orders(Resource):
     # parser to handle POST request for /order route
