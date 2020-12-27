@@ -2,10 +2,8 @@ import os
 
 from flask import Flask
 from flask_restful import Api
+from flask_cors import CORS
 # from flask_jwt import JWT
-
-# import other scripts
-from db import db
 #from security import authenticate, identity
 
 # import resorces
@@ -18,18 +16,15 @@ from resources.orders import *
 app = Flask(__name__)
 
 # sets up production environment
-app.config['DEBUG'] = False
+app.config['DEBUG'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///data.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-
 app.secret_key = 'rebequinha'
 
-# initializes database
-db.init_app(app)
-
 # creates API instance
+CORS(app)
 api = Api(app)
+
 
 # jwt = JWT(app, authenticate, identity)  # /auth
 
@@ -49,9 +44,16 @@ api.add_resource(Orders, '/orders')
 
 # api.add_resource(UserRegister, '/register')
 
+<<<<<<< HEAD
     
 if __name__ == '__main__':
+=======
+>>>>>>> main
     
+if __name__ == '__main__':
+    from db import db
+    db.init_app(app)
+
     if app.config['DEBUG']:
         @app.before_first_request
         def create_tables():

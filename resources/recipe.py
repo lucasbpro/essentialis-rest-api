@@ -92,7 +92,7 @@ class Recipes(Resource):
 
         # in case it exists, returns a message and HTTP 400 code (BAD REQUEST)
         if recipe:
-            return {'message': constants['ITEM_EXISTS'].format(description)}, 400
+            return {'message': constants['ITEM_EXISTS'].format(data['description'])}, 400
 
         # in case it does not exist, creates a new recipe using data passed
         # along with the HTTP request
@@ -116,6 +116,6 @@ class MaterialList(Resource):
         recipe = RecipeModel.find_by_id(id)
 
         if recipe:
-            return {'Materials': [x.json() for x in recipe.get_all_materials()]}
+            return {[x.json() for x in recipe.get_all_materials()]}
         else:
             return {'message' : constants['ID_NOT_FOUND']}
