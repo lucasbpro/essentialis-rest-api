@@ -8,6 +8,7 @@ from constants import constants
 
 # import model
 from models.recipe import RecipeModel
+from models.raw_material import RawMaterialModel 
 
 class Recipe(Resource):
 
@@ -16,6 +17,7 @@ class Recipe(Resource):
     parser.add_argument('description',type=str,required=False)
     parser.add_argument('labor_cost',type=float,required=False)
     parser.add_argument('supply_cost',type=float,required=False)
+    parser.add_argument('materials',type=int, action='append',required=False)
 
     # to handle HTTP GET /recipe?id=<int:id>
     def get(self, id):
@@ -53,12 +55,21 @@ class Recipe(Resource):
                 if key=='sell_by_date':
                     recipe.sell_by_date = data['sell_by_date']
                 if key=='materials':
-                    pass
+                    recipe.materials.clear()
+                    for id in data['materials']:
+                        material = RawMaterialModel.find_by_id(id)
+                        if material:
+                            recipe.materials.append(material)
+
             recipe.last_update = datetime.now().strftime("%d/%m/%Y %H:%M")
 
         # in case not exist, creates a new item
         else:
-            recipe = RecipeModel(**data)
+            recipe = RecipeModel(data['description'],data['labor_cost'],data['supply_cost'])
+            for id in data['materials']:
+                material = RawMaterialModel.find_by_id(id)
+                if material:
+                    recipe.materials.append(material)
 
         # tries to insert in database
         # returns 500 (internal server error) in case of database failure
@@ -77,6 +88,7 @@ class Recipes(Resource):
     parser.add_argument('description',type=str,required=True)
     parser.add_argument('labor_cost',type=float,required=True)
     parser.add_argument('supply_cost',type=float,required=True)
+    parser.add_argument('materials',type=int, action='append',required=True)
 
     # handles HTTP request GET /recipes
     def get(self):
@@ -96,8 +108,14 @@ class Recipes(Resource):
 
         # in case it does not exist, creates a new recipe using data passed
         # along with the HTTP request
-        recipe = RecipeModel(**data)
+        recipe = RecipeModel(data['description'],data['labor_cost'],data['supply_cost'])
 
+        # links the recipe to all related materials
+        for id in data['materials']:
+            material = RawMaterialModel.find_by_id(id)
+            if material:
+                recipe.materials.append(material)
+            
         # tries to insert in database
         # returns 500 (internal server error) in case of database failure
         try:
@@ -112,10 +130,8 @@ class Recipes(Resource):
 class MaterialList(Resource):
     # route: recipe/<int:id>/materials
     def get(self, id):
-
         recipe = RecipeModel.find_by_id(id)
-
         if recipe:
-            return {[x.json() for x in recipe.get_all_materials()]}
+            return recipe.get_materials()
         else:
             return {'message' : constants['ID_NOT_FOUND']}

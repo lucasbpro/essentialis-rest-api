@@ -31,7 +31,7 @@ class RecipeModel(db.Model):
                  'last_update'      : self.last_update,
                  'labor_cost'       : self.labor_cost,
                  'supply_cost'      : self.supply_cost,
-                 'materials'        : self.materials
+                 'materials'        : [material.id for material in self.materials]
                  }
 
     def save_to_db(self):
@@ -50,5 +50,5 @@ class RecipeModel(db.Model):
     def find_by_id(cls, id_):
          return cls.query.filter_by(id=id_).first()
     
-    def get_all_materials(self):
-        return self.materials
+    def get_materials(self):
+        return [material.json() for material in self.materials]
