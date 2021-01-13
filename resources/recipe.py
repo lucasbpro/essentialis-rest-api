@@ -86,8 +86,8 @@ class Recipes(Resource):
     # adds a parser to handle POST HTTP requests
     parser = reqparse.RequestParser()
     parser.add_argument('description',type=str,required=True)
-    parser.add_argument('labor_cost',type=float,required=True)
-    parser.add_argument('supply_cost',type=float,required=True)
+    parser.add_argument('labor_cost',type=float,required=False)
+    parser.add_argument('supply_cost',type=float,required=False)
     parser.add_argument('materials',type=int, action='append',required=True)
 
     # handles HTTP request GET /recipes
