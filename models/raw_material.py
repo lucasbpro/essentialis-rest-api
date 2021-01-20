@@ -22,6 +22,8 @@ class RawMaterialModel(db.Model):
     unit_material = db.Column(db.String(constants['UNIT_LENGTH']))     # m, ml, L, g (unidades de medicao)
     stock_amt = db.Column(db.Integer)
     sell_by_date = db.Column(db.String(constants['SHORT_LENGTH']))
+    creation_date = db.Column(db.String(constants['MEDIUM_LENGTH']))
+    last_update = db.Column(db.String(constants['MEDIUM_LENGTH']))
 
     # define relationships with other tables
     recipes = db.relationship('RecipeModel',
