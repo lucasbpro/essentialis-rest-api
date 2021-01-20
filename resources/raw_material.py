@@ -1,6 +1,7 @@
 # import flask libs
 from flask_restful import Resource, reqparse
 from constants import constants
+from datetime import datetime
 #from flask_jwt import jwt_required
 
 # import model
@@ -59,6 +60,8 @@ class RawMaterial(Resource):
                 if key=='sell_by_date':
                         raw_material.sell_by_date = data['sell_by_date']
 
+            raw_material.last_update = datetime.now().strftime("%d/%m/%Y %H:%M")
+
         # in case it does not exist, creates a new material using data passed
         # along with the HTTP request
         else:
@@ -100,7 +103,7 @@ class RawMaterials(Resource):
 
         # in case it exists, returns a message and HTTP 400 code (BAD REQUEST)
         if raw_material:
-            return {'message': "A raw material with descripton '{}' already exists.".format(description)}, 400
+            return {'message': "A raw material with descripton '{}' already exists.".format(data['description'])}, 400
 
         # in case it does not exist, creates a new material using data passed
         # along with the HTTP request

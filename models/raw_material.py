@@ -1,6 +1,7 @@
 
 from db import db #, materials_by_recipe  # import SQLAlchemy object
 from constants import constants         # constants dictionary
+from datetime import datetime
 
 materials_by_recipe = db.Table('materials_by_recipe',
     db.Column('recipe_id', db.Integer, db.ForeignKey('recipes.id'), primary_key=True),
@@ -36,10 +37,14 @@ class RawMaterialModel(db.Model):
         self.unit_material = unit_material
         self.stock_amt = stock_amt
         self.sell_by_date = sell_by_date
+        self.creation_date = datetime.now().strftime("%d/%m/%Y %H:%M")
+        self.last_update = self.creation_date
 
     def json(self):
         return  {'id'           : self.id,
                  'description'  : self.description,
+                 'creation_date': self.creation_date,
+                 'last_update'  : self.last_update,
                  'package_price': self.package_price,
                  'package_amt'  : self.package_amt,
                  'unit_material': self.unit_material,
