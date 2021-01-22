@@ -11,7 +11,7 @@ class RecipeModel(db.Model):
 
     # define columns in table
     id = db.Column(db.Integer, primary_key=True)
-    description = db.Column(db.String(constants['MEDIUM_LENGTH']))
+    description = db.Column(db.String(constants['LONG_LENGTH']))
     labor_cost = db.Column(db.Float(constants['PRICE_PRECISION']))
     supply_cost = db.Column(db.Float(constants['PRICE_PRECISION']))
     creation_date = db.Column(db.String(constants['MEDIUM_LENGTH']))
