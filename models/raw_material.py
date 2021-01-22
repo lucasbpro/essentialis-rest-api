@@ -16,7 +16,7 @@ class RawMaterialModel(db.Model):
 
     # define columns in table
     id = db.Column(db.Integer, primary_key=True)
-    description = db.Column(db.String(constants['MEDIUM_LENGTH']))
+    description = db.Column(db.String(constants['LONG_LENGTH']))
     package_price = db.Column(db.Float(constants['PRICE_PRECISION']))
     package_amt = db.Column(db.Integer)
     unit_material = db.Column(db.String(constants['UNIT_LENGTH']))     # m, ml, L, g (unidades de medicao)
