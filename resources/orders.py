@@ -12,7 +12,7 @@ class Order(Resource):
     # adds a parser to handle PUT an POST HTTP requests
     parser = reqparse.RequestParser()
     parser.add_argument('status_fabrication',type=str,required=False)
-    parser.add_argument('status_payment',type=float,required=False)
+    parser.add_argument('status_payment',type=str,required=False)
 
     # to handle HTTP GET /orders/<int:id>
     def get(self, id):
