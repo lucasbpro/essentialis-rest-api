@@ -2,9 +2,9 @@
 constants = {
 
     # ---- INT values
-    'SHORT_LENGTH'              : 10,
-    'MEDIUM_LENGTH'             : 30,
-    'LONG_LENGTH'               : 50,
+    'SHORT_LENGTH'              : 20,
+    'MEDIUM_LENGTH'             : 50,
+    'LONG_LENGTH'               : 100,
     'LONG_TEXT_DESCRIPTION'     : 140,
     'UNIT_LENGTH'               : 2,
     'PRICE_PRECISION'           : 2,
