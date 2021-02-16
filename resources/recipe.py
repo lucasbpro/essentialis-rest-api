@@ -132,6 +132,6 @@ class MaterialList(Resource):
     def get(self, id):
         recipe = RecipeModel.find_by_id(id)
         if recipe:
-            return recipe.get_materials()
+            return recipe.get_materials_amount()
         else:
             return {'message' : constants['ID_NOT_FOUND']}
