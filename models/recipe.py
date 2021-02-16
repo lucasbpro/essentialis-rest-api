@@ -2,6 +2,7 @@
 from db import db
 from constants import constants
 from datetime import datetime
+from models.recipe_material_amt import RecipeMaterialAmountModel
 
 # defines the model for 'recipes' table in db
 class RecipeModel(db.Model):
@@ -52,3 +53,10 @@ class RecipeModel(db.Model):
     
     def get_materials(self):
         return [material.json() for material in self.materials]
+
+    def get_materials_amount(self):
+        return [ { 
+                    "material_id": material.id, 
+                    "amount": RecipeMaterialAmountModel.find_by_material_id(material.id).amount
+                 } 
+                for material in self.materials]
