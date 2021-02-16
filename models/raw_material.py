@@ -1,6 +1,7 @@
 
 from db import db #, materials_by_recipe  # import SQLAlchemy object
 from constants import constants         # constants dictionary
+from datetime import datetime
 
 materials_by_recipe = db.Table('materials_by_recipe',
     db.Column('recipe_id', db.Integer, db.ForeignKey('recipes.id'), primary_key=True),
@@ -15,12 +16,14 @@ class RawMaterialModel(db.Model):
 
     # define columns in table
     id = db.Column(db.Integer, primary_key=True)
-    description = db.Column(db.String(constants['MEDIUM_LENGTH']))
+    description = db.Column(db.String(constants['LONG_LENGTH']))
     package_price = db.Column(db.Float(constants['PRICE_PRECISION']))
     package_amt = db.Column(db.Integer)
     unit_material = db.Column(db.String(constants['UNIT_LENGTH']))     # m, ml, L, g (unidades de medicao)
     stock_amt = db.Column(db.Integer)
     sell_by_date = db.Column(db.String(constants['SHORT_LENGTH']))
+    creation_date = db.Column(db.String(constants['MEDIUM_LENGTH']))
+    last_update = db.Column(db.String(constants['MEDIUM_LENGTH']))
 
     # define relationships with other tables
     recipes = db.relationship('RecipeModel',
@@ -36,10 +39,14 @@ class RawMaterialModel(db.Model):
         self.unit_material = unit_material
         self.stock_amt = stock_amt
         self.sell_by_date = sell_by_date
+        self.creation_date = datetime.now().strftime("%d/%m/%Y %H:%M")
+        self.last_update = self.creation_date
 
     def json(self):
         return  {'id'           : self.id,
                  'description'  : self.description,
+                 'creation_date': self.creation_date,
+                 'last_update'  : self.last_update,
                  'package_price': self.package_price,
                  'package_amt'  : self.package_amt,
                  'unit_material': self.unit_material,
