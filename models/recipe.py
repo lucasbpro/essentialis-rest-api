@@ -26,13 +26,19 @@ class RecipeModel(db.Model):
         self.last_update = self.creation_date
 
     def json(self):
+        materialList = {}
+        for material in self.materials:
+            recipeMaterialItem = RecipeMaterialAmountModel.find_by_map(self.id,material.id)
+            if recipeMaterialItem:
+                materialList[material.id] = recipeMaterialItem.amount  
+
         return  {'id'               : self.id,
                  'description'      : self.description,
                  'creation_date'    : self.creation_date,
                  'last_update'      : self.last_update,
                  'labor_cost'       : self.labor_cost,
                  'supply_cost'      : self.supply_cost,
-                 'materials'        : [material.id for material in self.materials]
+                 'materials'        : materialList
                  }
 
     def save_to_db(self):
@@ -55,8 +61,9 @@ class RecipeModel(db.Model):
         return [material.json() for material in self.materials]
 
     def get_materials_amount(self):
-        return [ { 
-                    "material_id": material.id, 
-                    "amount": RecipeMaterialAmountModel.find_by_material_id(material.id).amount
-                 } 
-                for material in self.materials]
+        materialList = {}
+        for material in self.materials:
+            recipeMaterialItem = RecipeMaterialAmountModel.find_by_map(self.id,material.id)
+            if recipeMaterialItem:
+                materialList[material.id] = recipeMaterialItem.amount  
+        return materialList
