@@ -20,11 +20,13 @@ class Recipe(Resource):
     parser.add_argument('supply_cost',type=float,required=False)
     parser.add_argument('materials', type=dict, action="append",required=False)
 
-    # to handle HTTP GET /recipe?id=<int:id>
+    # to handle HTTP GET /recipes/<int:id>
     def get(self, id):
-        #id_ = request.args.get('id')
         recipe = RecipeModel.find_by_id(id)
-        return recipe.json(), 200
+        if recipe:
+            return recipe.json(), 200
+        else:
+            return {'message': constants['ID_NOT_FOUND']}
 
     def delete(self, id):
         # checks if material exists in database
@@ -73,6 +75,9 @@ class Recipe(Resource):
                             else:
                                 materialRecipeItem = RecipeMaterialAmountModel(id, materialId, materialAmount)
                             materialRecipeItem.save_to_db()
+                        # in case any materialId provided does not exist
+                        else:
+                            return {"message": constants['MATERIAL_NOT_EXIST'].format(materialId)}, 400
 
             recipe.last_update = datetime.now().strftime("%d/%m/%Y %H:%M")
 
@@ -90,9 +95,11 @@ class Recipe(Resource):
                     # in case recipe-material map already exists, then just updates it
                     if materialRecipeItem:
                         materialRecipeItem.amount = materialAmount
+                        materialRecipeItem.save_to_db()
                         # otherwise, create a new recipe-material map
                     else:
                         materialRecipeItem = RecipeMaterialAmountModel(id, materialId, materialAmount)
+                        materialRecipeItem.save_to_db()
 
         # tries to insert in database
         # returns 500 (internal server error) in case of database failure
@@ -132,13 +139,26 @@ class Recipes(Resource):
         # in case it does not exist, creates a new recipe using data passed
         # along with the HTTP request
         recipe = RecipeModel(data['description'],data['labor_cost'],data['supply_cost'])
-
-        # links the recipe to all related materials
-        for id in data['materials']:
-            material = RawMaterialModel.find_by_id(id)
+        materialsDict =  data['materials'][0]
+        for key in materialsDict.keys():
+            materialId = int(key)
+            materialAmount = materialsDict[key]
+            material = RawMaterialModel.find_by_id(materialId)
             if material:
                 recipe.materials.append(material)
-            
+                materialRecipeItem = RecipeMaterialAmountModel.find_by_map(recipe.id, materialId)
+                # in case recipe-material map already exists, then just updates it
+                if materialRecipeItem:
+                    materialRecipeItem.amount = materialAmount
+                    materialRecipeItem.save_to_db()
+                # otherwise, create a new recipe-material map
+                else:
+                    materialRecipeItem = RecipeMaterialAmountModel(recipe.id, materialId, materialAmount)
+                    materialRecipeItem.save_to_db()
+            # in case any materialId provided does not exist
+            else:
+                return {"message": constants['MATERIAL_NOT_EXIST'].format(materialId)}, 200
+
         # tries to insert in database
         # returns 500 (internal server error) in case of database failure
         try:

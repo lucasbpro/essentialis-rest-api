@@ -13,6 +13,15 @@ class RecipeMaterialAmount(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('amount',type=float,required=True)
 
+    # handles HTTP GET /recipe/<int:recipe_id>/material/<int:material_id>
+    def get(self, recipe_id, material_id):
+        recipe_material = RecipeMaterialAmountModel.find_by_map(recipe_id, material_id)
+        if recipe_material:
+            return {"amount" : recipe_material.amount}, 200
+        else:
+            return {'Message': constants['ID_NOT_FOUND']}
+
+
     # handles HTTP PUT /recipe/<int:recipe_id>/material/<int:material_id>
     def put(self, recipe_id, material_id):
         # gets parameter from parser

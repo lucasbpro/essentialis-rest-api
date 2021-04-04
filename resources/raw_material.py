@@ -83,6 +83,7 @@ class RawMaterials(Resource):
     # adds a parser to handle POST HTTP requests
     parser = reqparse.RequestParser()
     parser.add_argument('description',type=str,required=False)
+    parser.add_argument('supplier_name',type=str,required=False)
     parser.add_argument('package_price',type=float,required=False)
     parser.add_argument('package_amt',type=int,required=False)
     parser.add_argument('unit_material',type=str,required=False)
