@@ -62,8 +62,9 @@ class RecipeModel(db.Model):
 
     def get_materials_amount(self):
         materialList = {}
-        for material in self.materials:
-            recipeMaterialItem = RecipeMaterialAmountModel.find_by_map(self.id,material.id)
-            if recipeMaterialItem:
-                materialList[material.id] = recipeMaterialItem.amount  
-        return materialList
+        return [item.json() for item in RecipeMaterialAmountModel.query.all()]
+        #for material in self.materials:
+        #    recipeMaterialItem = RecipeMaterialAmountModel.find_by_map(self.id,material.id)
+        #    if recipeMaterialItem:
+        #        materialList[str(material.id)] = recipeMaterialItem.amount  
+        #return materialList

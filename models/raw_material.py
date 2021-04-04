@@ -17,6 +17,7 @@ class RawMaterialModel(db.Model):
     # define columns in table
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String(constants['LONG_LENGTH']))
+    supplier_name = db.Column(db.String(constants['MEDIUM_LENGTH']))
     package_price = db.Column(db.Float(constants['PRICE_PRECISION']))
     package_amt = db.Column(db.Integer)
     unit_material = db.Column(db.String(constants['UNIT_LENGTH']))     # m, ml, L, g (unidades de medicao)
@@ -31,9 +32,10 @@ class RawMaterialModel(db.Model):
                                backref=db.backref('materials'),
                                lazy='dynamic')
 
-    def __init__(self, description, package_price, package_amt,
+    def __init__(self, description, supplier_name, package_price, package_amt,
                 unit_material, stock_amt, sell_by_date):
         self.description = description
+        self.supplier_name = supplier_name
         self.package_price = package_price
         self.package_amt = package_amt
         self.unit_material = unit_material
@@ -44,6 +46,7 @@ class RawMaterialModel(db.Model):
 
     def json(self):
         return  {'id'           : self.id,
+                 'supplier_name': self.supplier_name,
                  'description'  : self.description,
                  'creation_date': self.creation_date,
                  'last_update'  : self.last_update,

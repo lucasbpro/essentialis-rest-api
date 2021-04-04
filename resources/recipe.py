@@ -56,15 +56,23 @@ class Recipe(Resource):
                 if key=='sell_by_date':
                     recipe.sell_by_date = data['sell_by_date']
                 if key=='materials':
-                    recipe.materials.clear()
-                    for item in data['materials']:
-                        materialId = item.id
-                        materialAmount = item.amount
+                    recipe.materials.clear()            
+                    materialsDict =  data['materials'][0]
+                    for key in materialsDict.keys():
+                        materialId = int(key)
+                        materialAmount = materialsDict[key]
                         material = RawMaterialModel.find_by_id(materialId)
+                        # checks if material does exist in database and, if so, links it to the recipe
                         if material:
                             recipe.materials.append(material)
-                            print(recipe.id)
-                            materialRecipeItem = RecipeMaterialAmountModel(recipe.id, materialId, materialAmount)
+                            materialRecipeItem = RecipeMaterialAmountModel.find_by_map(id, materialId)
+                            # in case recipe-material map already exists, then just updates it
+                            if materialRecipeItem:
+                                materialRecipeItem.amount = materialAmount
+                            # otherwise, create a new recipe-material map
+                            else:
+                                materialRecipeItem = RecipeMaterialAmountModel(id, materialId, materialAmount)
+                            materialRecipeItem.save_to_db()
 
             recipe.last_update = datetime.now().strftime("%d/%m/%Y %H:%M")
 
@@ -78,13 +86,18 @@ class Recipe(Resource):
                 material = RawMaterialModel.find_by_id(materialId)
                 if material:
                     recipe.materials.append(material)
-                    materialRecipeItem = RecipeMaterialAmountModel(recipe.id, materialId, materialAmount)
+                    materialRecipeItem = RecipeMaterialAmountModel.find_by_map(id, materialId)
+                    # in case recipe-material map already exists, then just updates it
+                    if materialRecipeItem:
+                        materialRecipeItem.amount = materialAmount
+                        # otherwise, create a new recipe-material map
+                    else:
+                        materialRecipeItem = RecipeMaterialAmountModel(id, materialId, materialAmount)
 
         # tries to insert in database
         # returns 500 (internal server error) in case of database failure
         try:
             recipe.save_to_db()
-            materialRecipeItem.save_to_db()
         except:
             return {"message": constants['INSERT_FAIL']}, 500
 
