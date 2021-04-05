@@ -12,6 +12,7 @@ from resources.recipe import *
 from resources.customers import *
 from resources.orders import *
 from resources.recipe_material_amt import *
+from resources.users import *
 
 # creates Flask application
 app = Flask(__name__)
@@ -30,6 +31,8 @@ api = Api(app)
 jwt = JWT(app, authenticate, identity)
 
 # Sets up API endpoints
+api.add_resource(Users, '/users')
+
 api.add_resource(RawMaterial, '/raw_materials/<int:id>')
 api.add_resource(RawMaterials, '/raw_materials')
 
@@ -57,8 +60,12 @@ if __name__ == '__main__':
             
             # creates an admin user before initializing the app
             from models.user import UserModel
-            adminUser = UserModel("admin",os.environ.get('ADMIN_PASSWORD', 'testeAdmin'))
-            adminUser.save_to_db()
+            adminUser = UserModel.find_by_username("admin")
+            if adminUser:
+                pass
+            else: 
+                adminUser = UserModel("admin",os.environ.get('ADMIN_PASSWORD', 'testeAdmin'))
+                adminUser.save_to_db()
 
     app.run(port=5000)
 
