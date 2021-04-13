@@ -13,6 +13,7 @@ class Order(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('status_fabrication',type=str,required=False)
     parser.add_argument('status_payment',type=str,required=False)
+    parser.add_argument('product_id',type=str,required=False)
 
     # to handle HTTP GET /orders/<int:id>
     def get(self, id):
@@ -49,6 +50,8 @@ class Order(Resource):
                     order.status_fabrication = data['status_fabrication']
                 if key=='status_payment':
                     order.status_payment = data['status_payment']
+                if key=='product_id':
+                    order.product_id = data['product_id']
 
         # tries to insert in database
         # returns 500 (internal server error) in case of database failure

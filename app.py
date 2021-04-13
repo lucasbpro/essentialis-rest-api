@@ -46,6 +46,7 @@ api.add_resource(Customers, '/customers')
 
 api.add_resource(Order, '/orders/<int:id>')
 api.add_resource(Orders, '/orders')
+api.add_resource(OrderList, '/customers/<int:id>/orders')
 
 # api.add_resource(UserRegister, '/register')
     

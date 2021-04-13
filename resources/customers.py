@@ -101,3 +101,12 @@ class Customers(Resource):
         # returns JSON with the created Material and returns CREATED status (201)
         return customer.json(), 201
 
+# class used to get the orders from customer
+class OrderList(Resource):
+    # route: customer/<int:id>/orders
+    def get(self, id):
+        customer = CustomerModel.find_by_id(id)
+        if customer:
+            return customer.get_orders_from_customer()
+        else:
+            return {'message' : constants['ID_NOT_FOUND']}
