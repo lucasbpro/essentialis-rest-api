@@ -14,9 +14,6 @@ class CustomerModel(db.Model):
     email = db.Column(db.String(constants['MEDIUM_LENGTH']))   
     birth_date = db.Column(db.String(constants['SHORT_LENGTH']))
 
-    # define relationships with other tables
-    orders = db.relationship('OrderModel', lazy='dynamic')
-
     def __init__(self, name, email, birth_date):
         self.name = name
         self.email = email
@@ -45,3 +42,6 @@ class CustomerModel(db.Model):
     @classmethod
     def find_by_id(cls, id_):
         return cls.query.filter_by(id=id_).first()
+
+    def get_orders_from_customer(self):
+        return [order.json() for order in self.orders]
