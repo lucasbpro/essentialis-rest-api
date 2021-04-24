@@ -17,6 +17,7 @@ class RawMaterial(Resource):
     parser.add_argument('unit_material',type=str,required=False)
     parser.add_argument('stock_amt',type=int,required=False)
     parser.add_argument('sell_by_date',type=str,required=False)
+    parser.add_argument('supplier_name',type=str,required=False)
 
     # handles HTTP GET /raw_materials/<int:id>
     def get(self, id):
@@ -59,6 +60,8 @@ class RawMaterial(Resource):
                         raw_material.stock_amt = data['stock_amt']
                 if key=='sell_by_date':
                         raw_material.sell_by_date = data['sell_by_date']
+                if key=='supplier_name':
+                        raw_material.supplier_name = data['supplier_name']
 
             raw_material.last_update = datetime.now().strftime("%d/%m/%Y %H:%M")
 
@@ -89,6 +92,7 @@ class RawMaterials(Resource):
     parser.add_argument('unit_material',type=str,required=False)
     parser.add_argument('stock_amt',type=int,required=False)
     parser.add_argument('sell_by_date',type=str,required=False)
+    parser.add_argument('supplier_name',type=str,required=False)
 
     # handles HTTTP request GET /raw_materials
     def get(self):
