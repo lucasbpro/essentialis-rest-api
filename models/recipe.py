@@ -15,15 +15,17 @@ class RecipeModel(db.Model):
     description = db.Column(db.String(constants['LONG_LENGTH']))
     labor_cost = db.Column(db.Float(constants['PRICE_PRECISION']))
     supply_cost = db.Column(db.Float(constants['PRICE_PRECISION']))
+    productivity = db.Column(db.Integer)
     creation_date = db.Column(db.String(constants['MEDIUM_LENGTH']))
     last_update = db.Column(db.String(constants['MEDIUM_LENGTH']))
 
-    def __init__(self, description, labor_cost, supply_cost):
+    def __init__(self, description, labor_cost, supply_cost, productivity):
         self.description = description
         self.labor_cost = labor_cost
         self.supply_cost = supply_cost
         self.creation_date = datetime.now().strftime("%d/%m/%Y %H:%M")
         self.last_update = self.creation_date
+        self.productivity = productivity
 
     def json(self):
         materialList = {}
@@ -38,6 +40,7 @@ class RecipeModel(db.Model):
                  'last_update'      : self.last_update,
                  'labor_cost'       : self.labor_cost,
                  'supply_cost'      : self.supply_cost,
+                 'productivity'     : self.productivity,
                  'materials'        : materialList
                  }
 
