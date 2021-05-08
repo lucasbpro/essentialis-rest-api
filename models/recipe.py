@@ -21,11 +21,12 @@ class RecipeModel(db.Model):
 
     def __init__(self, description, labor_cost, supply_cost, productivity):
         self.description = description
-        self.labor_cost = labor_cost
-        self.supply_cost = supply_cost
+        self.labor_cost = labor_cost or 5
+        self.supply_cost = supply_cost or 0 
+        self.productivity = productivity or 1
         self.creation_date = datetime.now().strftime("%d/%m/%Y %H:%M")
         self.last_update = self.creation_date
-        self.productivity = productivity
+
 
     def json(self):
         materialList = {}
