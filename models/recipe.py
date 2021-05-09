@@ -19,6 +19,8 @@ class RecipeModel(db.Model):
     creation_date = db.Column(db.String(constants['MEDIUM_LENGTH']))
     last_update = db.Column(db.String(constants['MEDIUM_LENGTH']))
 
+    products = db.relationship('ProductModel', lazy='dynamic')
+
     def __init__(self, description, labor_cost, supply_cost, productivity):
         self.description = description
         self.labor_cost = labor_cost or 5
