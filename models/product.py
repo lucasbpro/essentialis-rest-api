@@ -13,22 +13,20 @@ class ProductModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'))
     stock_amt = db.Column(db.Integer)
-    last_update = db.Column(db.String(constants['MEDIUM_LENGTH']))
+    fabrication_date = db.Column(db.String(constants['MEDIUM_LENGTH']))
 
     # define relationships with other tables
     recipe = db.relationship('RecipeModel')
 
-    def __init__(self, recipe_id, stock_amt):
+    def __init__(self, recipe_id):
         self.recipe_id = recipe_id
-        self.stock_amt = stock_amt or 0
-        self.last_update = datetime.now().strftime("%d/%m/%Y %H:%M")
+        self.fabrication_date = datetime.now().strftime("%d/%m/%Y %H:%M")
 
     def json(self):
         return  {
             'id'               : self.id,
             'recipe_id'        : self.recipe_id,
-            'stock_amt'        : self.stock_amt,
-            'last_update'      : self.last_update
+            'fabrication_date' : self.fabrication_date
         }
 
     def save_to_db(self):
@@ -50,5 +48,6 @@ class ProductModel(db.Model):
     def get_recipe(self):
         return [self.recipe.json()]
 
-    def get_stock_amount(self):
-        return self.json().stock_amt
+    @classmethod
+    def get_stock_amount(cls, id_):
+        return len(cls.query.filter_by(recipe_id=id_))

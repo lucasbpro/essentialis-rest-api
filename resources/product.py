@@ -44,15 +44,12 @@ class Product(Resource):
         # in case it exists, updates it
         if product:
             for key in data.keys():
-                if key=='stock_amt' and data['stock_amt']:
-                    product.stock_amt = data['stock_amt']
-                    product.last_update = datetime.now().strftime("%d/%m/%Y %H:%M")
                 if key=='recipe_id' and data['recipe_id']:
                     recipe = RecipeModel.find_by_id(data['recipe_id'])
                     if recipe:
                         product.recipe_id = data['recipe_id']
                         product.recipe = recipe
-                        product.last_update = datetime.now().strftime("%d/%m/%Y %H:%M")
+                        product.fabrication_date = datetime.now().strftime("%d/%m/%Y %H:%M")
 
         # in case it does not exist, creates a new material using data passed
         # along with the HTTP request
@@ -72,7 +69,6 @@ class Products(Resource):
     # adds a parser to handle POST HTTP requests
     parser = reqparse.RequestParser()
     parser.add_argument('recipe_id',type=int,required=True)
-    parser.add_argument('stock_amt',type=int,required=False)
 
     # handles HTTP request GET /products
     def get(self):
@@ -83,16 +79,12 @@ class Products(Resource):
         # gets parameter from parser
         data = Products.parser.parse_args()
 
-        # checks if material exists in database
-        product = ProductModel.find_by_recipe_id(data['recipe_id'])
-
-        # in case it exists, returns a message and HTTP 400 code (BAD REQUEST)
-        if product:
-            return {'message': "A product related to recipe_id '{}' already exists.".format(data['recipe_id'])}, 400
-
-        # in case it does not exist, creates a new material using data passed
-        # along with the HTTP request
-        product = ProductModel(data['recipe_id'], data['stock_amt'])
+        recipe = RecipeModel.find_by_id(data['recipe_id'])
+        if recipe:
+            product = ProductModel(data['recipe_id'])
+        # in case provided recipe does not exist, throw error message
+        else:
+            return {"message": "A recipe with id '{}' does not exist.".format(data['recipe_id'])}, 400
 
         # tries to insert in database
         # returns 500 (internal server error) in case of database failure

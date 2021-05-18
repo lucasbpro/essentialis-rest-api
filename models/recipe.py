@@ -68,3 +68,6 @@ class RecipeModel(db.Model):
 
     def get_materials_amount(self):
         return [item.json() for item in RecipeMaterialAmountModel.query.all()]
+
+    def get_products_from_recipe(self):
+        return [product.json() for product in self.products]
