@@ -54,7 +54,8 @@ class RawMaterialModel(db.Model):
                  'package_amt'  : self.package_amt,
                  'unit_material': self.unit_material,
                  'stock_amt'    : self.stock_amt,
-                 'sell_by'      : self.sell_by_date
+                 'sell_by'      : self.sell_by_date,
+                 'recipes'      : [recipe.json()["id"] for recipe in self.recipes]
                  }
 
     def save_to_db(self):

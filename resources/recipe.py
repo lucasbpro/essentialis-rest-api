@@ -151,6 +151,7 @@ class Recipes(Resource):
             if material:
                 recipe.materials.append(material)
                 materialRecipeItem = RecipeMaterialAmountModel.find_by_map(recipe.id, materialId)
+
                 # in case recipe-material map already exists, then just updates it
                 if materialRecipeItem:
                     materialRecipeItem.amount = materialAmount
@@ -159,6 +160,11 @@ class Recipes(Resource):
                 else:
                     materialRecipeItem = RecipeMaterialAmountModel(recipe.id, materialId, materialAmount)
                     materialRecipeItem.save_to_db()
+        
+                material_unit_price = material.package_price/material.package_amt
+                recipe.supply_cost += material_unit_price*materialAmount
+                
+
             # in case any materialId provided does not exist
             else:
                 return {"message": constants['MATERIAL_NOT_EXIST'].format(materialId)}, 200
