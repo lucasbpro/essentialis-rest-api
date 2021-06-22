@@ -9,6 +9,7 @@ from security import authenticate, identity
 # import resorces
 from resources.raw_material import *
 from resources.recipe import *
+from resources.product import *
 from resources.customers import *
 from resources.orders import *
 from resources.recipe_material_amt import *
@@ -17,9 +18,9 @@ from resources.users import *
 # creates Flask application
 app = Flask(__name__)
 
-# sets up production environment
+# sets up MAIN environment
 app.config['DEBUG'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///data.db').replace("://", "ql://", 1)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL').replace("://", "ql://", 1)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'rebequinha'
 
@@ -40,6 +41,9 @@ api.add_resource(Recipe,  '/recipes/<int:id>')
 api.add_resource(Recipes,  '/recipes')
 api.add_resource(MaterialList, '/recipe/<int:id>/materials')
 api.add_resource(RecipeMaterialAmount,'/recipe/<int:recipe_id>/material/<int:material_id>')
+
+api.add_resource(Product, '/products/<int:id>')
+api.add_resource(Products, '/products')
 
 api.add_resource(Customer, '/customers/<int:id>')
 api.add_resource(Customers, '/customers')

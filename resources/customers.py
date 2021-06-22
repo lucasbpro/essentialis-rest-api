@@ -19,7 +19,7 @@ class Customer(Resource):
         if customer:
             return customer.json(), 200
         else:
-            return {'Message': constants['ID_NOT_EXIST']}
+            return {'Message': constants['ID_NOT_FOUND']}
 
     def delete(self, id):
         # checks if material exists in database

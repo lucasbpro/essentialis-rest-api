@@ -18,6 +18,7 @@ class Recipe(Resource):
     parser.add_argument('description',type=str,required=False)
     parser.add_argument('labor_cost',type=float,required=False)
     parser.add_argument('supply_cost',type=float,required=False)
+    parser.add_argument('productivity',type=int,required=False)
     parser.add_argument('materials', type=dict, action="append",required=False)
 
     # to handle HTTP GET /recipes/<int:id>
@@ -55,6 +56,8 @@ class Recipe(Resource):
                     recipe.labor_cost = data['labor_cost']
                 if key=='supply_cost':
                     recipe.supply_cost = data['supply_cost']
+                if key=='productivity':
+                    recipe.productivity = data['productivity']
                 if key=='sell_by_date':
                     recipe.sell_by_date = data['sell_by_date']
                 if key=='materials':
@@ -83,7 +86,7 @@ class Recipe(Resource):
 
         # in case not exist, creates a new item
         else:
-            recipe = RecipeModel(data['description'],data['labor_cost'],data['supply_cost'])
+            recipe = RecipeModel(data['description'],data['labor_cost'],data['supply_cost'], data['productivity'])
             materialsDict =  data['materials'][0]
             for key in materialsDict.keys():
                 materialId = int(key)
@@ -118,6 +121,7 @@ class Recipes(Resource):
     parser.add_argument('description',type=str,required=True)
     parser.add_argument('labor_cost',type=float,required=False)
     parser.add_argument('supply_cost',type=float,required=False)
+    parser.add_argument('productivity',type=int,required=False)
     parser.add_argument('materials',type=dict,action="append",required=True)
 
     # handles HTTP request GET /recipes
@@ -138,7 +142,7 @@ class Recipes(Resource):
 
         # in case it does not exist, creates a new recipe using data passed
         # along with the HTTP request
-        recipe = RecipeModel(data['description'],data['labor_cost'],data['supply_cost'])
+        recipe = RecipeModel(data['description'],data['labor_cost'],data['supply_cost'], data['productivity'])
         materialsDict =  data['materials'][0]
         for key in materialsDict.keys():
             materialId = int(key)
@@ -147,6 +151,7 @@ class Recipes(Resource):
             if material:
                 recipe.materials.append(material)
                 materialRecipeItem = RecipeMaterialAmountModel.find_by_map(recipe.id, materialId)
+
                 # in case recipe-material map already exists, then just updates it
                 if materialRecipeItem:
                     materialRecipeItem.amount = materialAmount
@@ -155,6 +160,11 @@ class Recipes(Resource):
                 else:
                     materialRecipeItem = RecipeMaterialAmountModel(recipe.id, materialId, materialAmount)
                     materialRecipeItem.save_to_db()
+        
+                material_unit_price = material.package_price/material.package_amt
+                recipe.supply_cost += material_unit_price*materialAmount
+                
+
             # in case any materialId provided does not exist
             else:
                 return {"message": constants['MATERIAL_NOT_EXIST'].format(materialId)}, 200
