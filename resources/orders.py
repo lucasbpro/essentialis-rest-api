@@ -46,11 +46,14 @@ class Order(Resource):
         # in case it exists, updates it
         if order:
             for key in data.keys():
-                if key=='status_fabrication':
+
+                if key=='status_fabrication' and data['status_fabrication']:
                     order.status_fabrication = data['status_fabrication']
-                if key=='status_payment':
+
+                if key=='status_payment' and data['status_payment']:
                     order.status_payment = data['status_payment']
-                if key=='product_id':
+
+                if key=='product_id' and data['product_id']:
                     order.product_id = data['product_id']
 
         # tries to insert in database
