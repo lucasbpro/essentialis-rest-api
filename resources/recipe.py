@@ -46,21 +46,27 @@ class Recipe(Resource):
 
         # checks if item exists in database
         recipe = RecipeModel.find_by_id(id)
-
-        # in case it exists, updates it
+        
+        # in case it exists, updates each of the recipe's parameters
         if recipe:
             for key in data.keys():
-                if key=='description':
+                
+                if key=='description' and data['description']:
                     recipe.description = data['description']
-                if key=='labor_cost':
+
+                if key=='labor_cost' and data['labor_cost']:
                     recipe.labor_cost = data['labor_cost']
-                if key=='supply_cost':
+
+                if key=='supply_cost' and data['supply_cost']:
                     recipe.supply_cost = data['supply_cost']
-                if key=='productivity':
+
+                if key=='productivity' and data['productivity']:
                     recipe.productivity = data['productivity']
-                if key=='sell_by_date':
+
+                if key=='sell_by_date' and data['sell_by_date']:
                     recipe.sell_by_date = data['sell_by_date']
-                if key=='materials':
+
+                if key=='materials' and data['materials']:
                     recipe.materials.clear()            
                     materialsDict =  data['materials'][0]
                     for key in materialsDict.keys():

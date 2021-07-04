@@ -50,17 +50,23 @@ class RawMaterial(Resource):
         # in case it exists, updates it
         if raw_material:
             for key in data.keys():
-                if key=='package_price':
+
+                if key=='package_price' and data['package_price']:
                         raw_material.package_price = data['package_price']
-                if key=='package_amt':
+
+                if key=='package_amt' and data['package_amt']:
                         raw_material.package_amt = data['package_amt']
-                if key=='unit_material':
+
+                if key=='unit_material' and data['unit_material']:
                         raw_material.unit_material = data['unit_material']
-                if key=='stock_amt':
+
+                if key=='stock_amt' and data['stock_amt']:
                         raw_material.stock_amt = data['stock_amt']
-                if key=='sell_by_date':
+
+                if key=='sell_by_date' and data['sell_by_date']:
                         raw_material.sell_by_date = data['sell_by_date']
-                if key=='supplier_name':
+
+                if key=='supplier_name' and data['supplier_name']:
                         raw_material.supplier_name = data['supplier_name']
 
             raw_material.last_update = datetime.now().strftime("%d/%m/%Y %H:%M")

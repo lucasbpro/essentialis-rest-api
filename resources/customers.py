@@ -44,8 +44,10 @@ class Customer(Resource):
             for key in data.keys():
                 if key=='name' and data['name']:
                         customer.name = data['name']
+
                 if key=='email' and data['email']:
                         customer.email = data['email']
+
                 if key=='birth_date' and data['birth_date']:
                         customer.birth_date = data['birth_date']
 
