@@ -2,4 +2,3 @@ __pycache__/
 inserts/
 venv/
 data.db
-app.py
