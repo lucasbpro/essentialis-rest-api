@@ -19,10 +19,19 @@ from resources.users import *
 app = Flask(__name__)
 
 # sets up MAIN environment
-app.config['DEBUG'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL').replace("://", "ql://", 1)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'rebequinha'
+
+if os.environ.get('ENVIRONMENT') == 'production':
+    app.config['DEBUG'] = False
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL').replace("://", "ql://", 1)
+elif os.environ.get('ENVIRONMENT') == 'main':
+    app.config['DEBUG'] = True
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL').replace("://", "ql://", 1)
+else: 
+    app.config['DEBUG'] = True
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///data.db')
+
 
 # creates API instance
 CORS(app)
